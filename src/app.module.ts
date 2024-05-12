@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModel } from './entity/user.entitiy';
 import { CarModel } from './entity/inherit.entity';
 import { ProfileModel } from './entity/profile.entity';
+import { PostModel } from './entity/post.entity';
 
 @Module({
   imports: [
@@ -15,10 +16,10 @@ import { ProfileModel } from './entity/profile.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'testdb',
-      entities: [UserModel, CarModel, ProfileModel],
+      entities: [UserModel, CarModel, ProfileModel, PostModel],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([UserModel, CarModel, ProfileModel]),
+    TypeOrmModule.forFeature([UserModel, CarModel, ProfileModel, PostModel]),
   ],
   controllers: [AppController],
   providers: [AppService],

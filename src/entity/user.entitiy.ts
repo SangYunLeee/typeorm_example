@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
 import { ProfileModel } from './profile.entity';
+import { PostModel } from './post.entity';
 
 enum Role {
   ADMIN = 'admin',
@@ -65,4 +67,7 @@ export class UserModel {
     default: Role.USER,
   })
   role: Role;
+
+  @OneToMany(() => PostModel, (post) => post.author)
+  posts: PostModel[];
 }
