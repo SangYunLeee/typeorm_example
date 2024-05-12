@@ -3,12 +3,15 @@ import { AppService } from './app.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserModel } from './entity/user.entitiy';
+import { ProfileModel } from './entity/profile.entity';
 
 @Controller()
 export class AppController {
   constructor(
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
+    @InjectRepository(ProfileModel)
+    private readonly profileRepository: Repository<ProfileModel>,
     private readonly appService: AppService,
   ) {}
 
@@ -18,9 +21,10 @@ export class AppController {
   }
 
   @Get('/users')
-  getUsers(): Promise<UserModel[]> {
-    return this.userRepository.find();
+  getUsers() {
+    return this.userRepository.find({ relations: { profile: true } });
   }
+
   @Post('/users')
   postUsers(): Promise<UserModel> {
     const user = new UserModel();
@@ -37,5 +41,19 @@ export class AppController {
     post.title = post.title + '0';
     await this.userRepository.save(post);
     return post;
+  }
+
+  // profile
+  @Post('/users/profile') // create profile
+  async createUserAndProfile(): Promise<UserModel> {
+    const user = await this.userRepository.save({
+      title: 'test title',
+      name: { first: 'test', last: 'test' },
+    });
+    await this.profileRepository.save({
+      user,
+      age: 20,
+    });
+    return user;
   }
 }
