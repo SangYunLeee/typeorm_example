@@ -1,4 +1,3 @@
-import { generate } from 'rxjs';
 import {
   Column,
   CreateDateColumn,
@@ -9,13 +8,38 @@ import {
   VersionColumn,
 } from 'typeorm';
 
+enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
+class Name {
+  @Column({
+    default: 'Mr.',
+  })
+  first: string;
+
+  @Column({
+    default: 'John',
+  })
+  last: string;
+}
+
 @Entity()
 export class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'title',
+    select: true,
+  })
   title: string;
+
+  @Column(() => Name)
+  name: Name;
 
   @CreateDateColumn()
   createdDate: Date;
@@ -29,4 +53,11 @@ export class UserModel {
   @Column()
   @Generated('uuid')
   additionalId: string;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.USER,
+  })
+  role: Role;
 }
