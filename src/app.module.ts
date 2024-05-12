@@ -6,6 +6,7 @@ import { UserModel } from './entity/user.entitiy';
 import { CarModel } from './entity/inherit.entity';
 import { ProfileModel } from './entity/profile.entity';
 import { PostModel } from './entity/post.entity';
+import { TagModel } from './entity/tag.entity';
 
 @Module({
   imports: [
@@ -16,10 +17,16 @@ import { PostModel } from './entity/post.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'testdb',
-      entities: [UserModel, CarModel, ProfileModel, PostModel],
+      entities: [UserModel, CarModel, ProfileModel, PostModel, TagModel],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([UserModel, CarModel, ProfileModel, PostModel]),
+    TypeOrmModule.forFeature([
+      UserModel,
+      CarModel,
+      ProfileModel,
+      PostModel,
+      TagModel,
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserModel } from './entity/user.entitiy';
 import { ProfileModel } from './entity/profile.entity';
+import { PostModel } from './entity/post.entity';
+import { TagModel } from './entity/tag.entity';
 
 @Controller()
 export class AppController {
@@ -12,6 +14,10 @@ export class AppController {
     private readonly userRepository: Repository<UserModel>,
     @InjectRepository(ProfileModel)
     private readonly profileRepository: Repository<ProfileModel>,
+    @InjectRepository(PostModel)
+    private readonly postRepository: Repository<PostModel>,
+    @InjectRepository(TagModel)
+    private readonly tagRepository: Repository<TagModel>,
     private readonly appService: AppService,
   ) {}
 
@@ -55,5 +61,36 @@ export class AppController {
       age: 20,
     });
     return user;
+  }
+
+  @Get('/posts')
+  getPosts() {
+    return this.postRepository.find({ relations: ['author', 'tags'] });
+  }
+
+  @Post('/posts/tags')
+  async createPostAndTags() {
+    const post1 = await this.postRepository.save({
+      title: 'Javascript 강의',
+      content: '자바스크립트 솰라솰라',
+    });
+    const post2 = await this.postRepository.save({
+      title: 'NestJS 강의',
+      content: 'NestJS 솰라솰라',
+    });
+    const tag1 = await this.tagRepository.save({
+      name: '프로그래밍',
+      posts: [post1, post2],
+    });
+    const tag2 = await this.tagRepository.save({
+      name: 'NestJS',
+      posts: [post2],
+    });
+    const post3 = await this.postRepository.save({
+      title: 'Java 강의',
+      content: 'Java 솰라솰라',
+      tags: [tag1],
+    });
+    return true;
   }
 }
