@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModel } from './entity/user.entitiy';
+import { CarModel } from './entity/inherit.entity';
 
 @Module({
   imports: [
@@ -13,10 +14,10 @@ import { UserModel } from './entity/user.entitiy';
       username: 'postgres',
       password: 'postgres',
       database: 'testdb',
-      entities: [UserModel],
+      entities: [UserModel, CarModel],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([UserModel]),
+    TypeOrmModule.forFeature([UserModel, CarModel]),
   ],
   controllers: [AppController],
   providers: [AppService],
